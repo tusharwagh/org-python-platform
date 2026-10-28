@@ -1,0 +1,10 @@
+python-dotenv>=1.0.0
+build>=1.0.0
+pytest>=8.0.0
+ruff>=0.4.0
+litellm==1.90.2
+-e packages/litellm_gateway[dev]
+-e packages/langfuse_tracing[dev]
+-e packages/fastapi_platform[dev]
+-e packages/sqlalchemy_idempotency[dev]
+-e packages/agent_desk[dev]

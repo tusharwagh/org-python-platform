@@ -1,4 +1,4 @@
-"""Settings for the LiteLLM gateway (decoupled from app Settings)."""
+"""Settings for the LiteLLM gateway (explicit dataclass; inject from your app config)."""
 
 from __future__ import annotations
 

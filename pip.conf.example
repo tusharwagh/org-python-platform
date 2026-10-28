@@ -1,0 +1,8 @@
+# GitHub Packages PyPI index for org-python-platform
+# Copy to ~/.pip/pip.conf or set PIP_EXTRA_INDEX_URL in CI.
+#
+# Token: GitHub PAT with read:packages, or GITHUB_TOKEN in Actions.
+# Replace YOUR_GITHUB_TOKEN below.
+
+[global]
+extra-index-url = https://__token__:YOUR_GITHUB_TOKEN@pypi.pkg.github.com/tusharwagh/simple/

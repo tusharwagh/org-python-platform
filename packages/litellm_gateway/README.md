@@ -1,6 +1,6 @@
 # litellm-gateway
 
-LiteLLM Router gateway extracted from LMS-AI `shared/llm/`.
+LiteLLM Router gateway with fallbacks, input guardrails, and cost/usage tracking.
 
 ```python
 from litellm_gateway import LlmGateway, LlmGatewaySettings
@@ -18,3 +18,5 @@ result = gateway.complete(
 )
 print(result.endpoint.provider, result.cost_usd)
 ```
+
+Build `LlmGatewaySettings` from your application config — see [consumer integration](../../docs/consumer-integration.md).

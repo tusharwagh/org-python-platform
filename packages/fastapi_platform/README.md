@@ -1,6 +1,6 @@
 # fastapi-platform-kit
 
-Shared FastAPI building blocks extracted from LMS-AI.
+Shared FastAPI building blocks: exception handlers, health router, JWT helpers, SQLAlchemy mixins.
 
 ```python
 from fastapi import FastAPI
@@ -10,3 +10,5 @@ app = FastAPI()
 register_exception_handlers(app, debug=False)
 app.include_router(health_router)
 ```
+
+Routers, RBAC, and domain routes belong in your application.

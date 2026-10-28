@@ -1,40 +1,70 @@
 # org-python-platform
 
-Reusable Python packages extracted from [LMS-AI](https://github.com/org/LMS-AI) following the tiered extraction plan.
+Domain-agnostic Python packages for LLM gateways, observability, FastAPI plumbing, idempotency, and agent desk primitives.
+
+**Current version:** see [`VERSION`](VERSION) · **Consume:** [`docs/CONSUMING.md`](docs/CONSUMING.md) · **Release:** [`docs/PUBLISH.md`](docs/PUBLISH.md) · **Integrate:** [`docs/consumer-integration.md`](docs/consumer-integration.md) · **Org CI:** [`docs/ORG-CI-STANDARDS.md`](docs/ORG-CI-STANDARDS.md)
 
 ## Packages
 
-| Package | PyPI name | Source in LMS-AI | Status |
-|---------|-----------|------------------|--------|
-| [litellm_gateway](packages/litellm_gateway/) | `litellm-gateway` | `src/lms/shared/llm/` | Extracted |
-| [langfuse_tracing](packages/langfuse_tracing/) | `langfuse-tracing` | `src/lms/shared/observability/tracing.py` | Extracted |
-| [fastapi_platform](packages/fastapi_platform/) | `fastapi-platform-kit` | `src/lms/shared/http/`, `auth/`, `db/` | Extracted |
-| [sqlalchemy_idempotency](packages/sqlalchemy_idempotency/) | `sqlalchemy-idempotency` | `src/lms/shared/idempotency/` | Extracted |
-| [agent_desk](packages/agent_desk/) | `agent-desk-starter` | `src/lms/agent/graph.py`, generic masking | Extracted |
+| Package | PyPI name | Purpose |
+|---------|-----------|---------|
+| [litellm_gateway](packages/litellm_gateway/) | `litellm-gateway` | LiteLLM Router gateway, guardrails, cost tracking |
+| [langfuse_tracing](packages/langfuse_tracing/) | `langfuse-tracing` | Langfuse spans and structured audit logging |
+| [fastapi_platform](packages/fastapi_platform/) | `fastapi-platform-kit` | FastAPI errors, health, JWT, SQLAlchemy mixins |
+| [sqlalchemy_idempotency](packages/sqlalchemy_idempotency/) | `sqlalchemy-idempotency` | Idempotent commit store |
+| [agent_desk](packages/agent_desk/) | `agent-desk-starter` | LangGraph HITL skeleton, sessions, privacy helpers |
+
+Product-specific workflows, agents, and APIs are **not** in this repo — wire these packages in your application. See [docs/PLATFORM.md](docs/PLATFORM.md).
 
 ## Cookbooks
 
-- [workflow-desk](docs/workflow-desk/README.md) — HITL workflow API pattern (from `lms/api/workflows/`)
+- [workflow-desk](docs/workflow-desk/README.md) — generic HITL multi-step REST workflow pattern
 
-## Extraction order
+## Install (consumers)
 
-1. **LLM + tracing** — `litellm_gateway`, `langfuse_tracing`
-2. **FastAPI platform + idempotency** — `fastapi_platform`, `sqlalchemy_idempotency`
-3. **Agent desk** — `agent_desk`
-4. **Workflow cookbook** — docs only
+**Git URL (no registry auth):**
 
-## Install (local dev)
-
-```bash
-cd packages/litellm_gateway && pip install -e .
-cd packages/langfuse_tracing && pip install -e .
-# … repeat per package
+```toml
+"litellm-gateway @ git+https://github.com/tusharwagh/org-python-platform.git@v0.1.0#subdirectory=packages/litellm_gateway"
 ```
 
-## LMS adoption
+**GitHub Packages (internal PyPI):**
 
-LMS-AI continues to use in-tree copies until wired via `pyproject.toml` optional deps. See `LMS-AI/docs/extraction/README.md`.
+```bash
+pip install litellm-gateway==0.1.0 \
+  --extra-index-url "https://__token__:${GITHUB_TOKEN}@pypi.pkg.github.com/tusharwagh/simple/"
+```
 
-## License
+Full examples: [`docs/CONSUMING.md`](docs/CONSUMING.md).
 
-Same as LMS-AI (project-specific).
+## Release
+
+```bash
+# bump VERSION + CHANGELOG, then:
+make sync
+make build
+git tag -a v0.1.0 -m "org-python-platform v0.1.0"
+git push origin main --tags   # triggers .github/workflows/publish.yml
+```
+
+## Local development
+
+Create the IDE Python environment (`.venv` + editable package installs):
+
+```bash
+make venv          # create .venv and install all packages
+make env-check     # verify .env loads
+make help          # list build targets
+```
+
+Cursor/VS Code picks up `.venv/bin/python` automatically via [`.vscode/settings.json`](.vscode/settings.json).
+
+Environment variables are documented in [`.env.example`](.env.example). From the repo root (after `make venv`):
+
+```bash
+python -c "from scripts.from_env import load_dotenv_file, llm_gateway_settings; load_dotenv_file(); print(llm_gateway_settings())"
+```
+
+## Manifest
+
+Package scope and boundaries: [`docs/PLATFORM.md`](docs/PLATFORM.md).

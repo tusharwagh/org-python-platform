@@ -8,5 +8,10 @@ from sqlalchemy_idempotency import find_cached_response, store_response, make_id
 
 IdempotencyRecord = make_idempotency_model(Base)
 # migrate table, then:
-cached = find_cached_response(session, scope_key="issue", idempotency_key=key, payload=body)
+cached = find_cached_response(
+    session,
+    scope_key="workflows:example:commit",
+    idempotency_key=key,
+    payload=body,
+)
 ```

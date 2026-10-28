@@ -41,8 +41,3 @@ def build_sop_graph() -> StateGraph[AgentGraphState, None, AgentGraphState, Agen
 def compile_sop_graph() -> Any:
     checkpointer = MemorySaver()
     return build_sop_graph().compile(checkpointer=checkpointer)
-
-
-# Backward-compatible aliases for LMS migration
-build_issue_sop_graph = build_sop_graph
-compile_issue_sop_graph = compile_sop_graph
